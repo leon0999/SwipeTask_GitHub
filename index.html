@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwipeTask - 알림을 스와이프로 완벽하게</title>
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        :root {
+            --primary: #007AFF;
+            --success: #34C759;
+            --warning: #FF9500;
+            --dark: #000000;
+            --light: #FFFFFF;
+            --gray: #8E8E93;
+            --section-padding: 120px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* 부드러운 스크롤 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 컨테이너 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 탐색 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.95);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--success) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 16px;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        /* 영웅 섹션 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(0, 122, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(52, 199, 89, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(1deg); }
+            66% { transform: translate(-20px, 20px) rotate(-1deg); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--success) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 300;
+            margin-bottom: 48px;
+            opacity: 0.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #0051D5 100%);
+            color: var(--light);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 122, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* 데모 섹션 */
+        .demo-section {
+            padding: var(--section-padding) 0;
+            background: rgba(255, 255, 255, 0.02);
+            position: relative;
+        }
+
+        .demo-container-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .demo-iframe {
+            width: 390px;
+            height: 844px;
+            border: none;
+            border-radius: 47px;
+            box-shadow: 0 0 0 12px #1a1a1a, 0 0 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .demo-features {
+            position: absolute;
+            left: -300px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 250px;
+        }
+
+        .demo-features-right {
+            position: absolute;
+            right: -300px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 250px;
+        }
+
+        .demo-feature {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: fadeInLeft 0.6s ease forwards;
+        }
+
+        .demo-feature:nth-child(1) { animation-delay: 0.2s; }
+        .demo-feature:nth-child(2) { animation-delay: 0.4s; }
+        .demo-feature:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes fadeInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .demo-features-right .demo-feature {
+            transform: translateX(20px);
+            animation: fadeInRight 0.6s ease forwards;
+        }
+
+        @keyframes fadeInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .demo-feature h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .demo-feature p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Problem Section */
+        .problem {
+            padding: var(--section-padding) 0;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .section-subtitle {
+            font-size: clamp(18px, 2.5vw, 24px);
+            font-weight: 300;
+            opacity: 0.8;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .problem-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .problem-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .problem-stat {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+
+        /* 기능 섹션 */
+        .features {
+            padding: var(--section-padding) 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--success) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            font-size: 16px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* 추천사 */
+        .testimonials {
+            padding: var(--section-padding) 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .quote-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 60px;
+            opacity: 0.1;
+        }
+
+        .testimonial-text {
+            font-size: 18px;
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--success) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .author-info h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .author-info p {
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        .rating {
+            display: flex;
+            gap: 4px;
+            margin-top: 16px;
+        }
+
+        .star {
+            color: #FFD700;
+            font-size: 20px;
+        }
+
+        /* CTA 섹션 */
+        .cta {
+            padding: var(--section-padding) 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(0, 122, 255, 0.2) 0%, transparent 70%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta h2 {
+            font-size: clamp(36px, 5vw, 64px);
+            margin-bottom: 24px;
+        }
+
+        .cta p {
+            font-size: clamp(18px, 2.5vw, 24px);
+            margin-bottom: 48px;
+            opacity: 0.8;
+        }
+
+        .app-store-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .app-store-btn {
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .app-store-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .app-store-icon {
+            font-size: 32px;
+        }
+
+        .app-store-text {
+            text-align: left;
+        }
+
+        .app-store-text small {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .app-store-text strong {
+            font-size: 16px;
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            opacity: 0.6;
+            font-size: 14px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .demo-features,
+            .demo-features-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 80px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .hero p {
+                font-size: 20px;
+            }
+
+            .btn {
+                font-size: 16px;
+                padding: 14px 28px;
+            }
+
+            .demo-iframe {
+                transform: scale(0.6);
+                margin: -150px 0;
+            }
+
+            .problem-grid,
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        /* 애니메이션 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 로딩 애니메이션 */
+        .loading {
+            position: fixed;
+            inset: 0;
+            background: var(--dark);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 데모용 모달 */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: var(--light);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">SwipeTask</div>
+                <ul class="nav-links">
+                    <li><a href="#home">홈</a></li>
+                    <li><a href="#solution">솔루션</a></li>
+                    <li><a href="#problem">문제</a></li>
+                    <li><a href="#features">기능</a></li>
+                    <li><a href="#download">사전예약</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>알림을 <span class="gradient-text">스와이프</span>로<br>완벽하게 관리하세요</h1>
+                <p>매일 쌓이는 수십 개의 알림, 이제 손가락 하나로 해결하세요</p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="scrollToSection('solution')">
+                        <span>✨</span> 데모 체험하기
+                    </button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('download')">
+                        <span>📱</span> 앱 사전예약
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section (기존 Solution) -->
+    <section class="demo-section" id="solution">
+        <div class="container">
+            <h2 class="section-title fade-in">혁신적인 솔루션</h2>
+            <p class="section-subtitle fade-in">알림 센터에서 바로 모든 것을 처리하세요</p>
+            
+            <div class="demo-container-wrapper">
+                <div class="demo-features">
+                    <div class="demo-feature">
+                        <h4>→ 오른쪽</h4>
+                        <p>할 일 완료 처리</p>
+                    </div>
+                    <div class="demo-feature">
+                        <h4>← 왼쪽</h4>
+                        <p>시간 재설정</p>
+                    </div>
+                    <div class="demo-feature">
+                        <h4>↑ 위로</h4>
+                        <p>홈으로 돌아가기</p>
+                    </div>
+                </div>
+                
+                <iframe src="demo.html" class="demo-iframe" id="demoFrame"></iframe>
+                
+                <div class="demo-features-right">
+                    <div class="demo-feature">
+                        <h4>직관적인 조작</h4>
+                        <p>복잡한 과정 없이 손가락 하나로</p>
+                    </div>
+                    <div class="demo-feature">
+                        <h4>즉각적인 피드백</h4>
+                        <p>시각적 확인과 햅틱 반응</p>
+                    </div>
+                    <div class="demo-feature">
+                        <h4>스마트한 정리</h4>
+                        <p>처리된 알림은 자동으로 정리됩니다</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem" id="problem">
+        <div class="container">
+            <h2 class="section-title fade-in">당신도 이런 고민이 있나요?</h2>
+            <p class="section-subtitle fade-in">iOS 사용자 87%가 매일 알림 스트레스를 겪고 있습니다</p>
+            
+            <div class="problem-grid">
+                <div class="problem-card fade-in">
+                    <div class="problem-icon">😫</div>
+                    <div class="problem-stat">23개</div>
+                    <h3>쌓인 알림</h3>
+                    <p>매일 아침 확인해야 할 미완료 할 일들이 스트레스로 다가옵니다</p>
+                </div>
+                <div class="problem-card fade-in">
+                    <div class="problem-icon">⏱️</div>
+                    <div class="problem-stat">4단계</div>
+                    <h3>복잡한 처리 과정</h3>
+                    <p>알림 → 앱 실행 → 찾기 → 완료까지 너무 많은 단계</p>
+                </div>
+                <div class="problem-card fade-in">
+                    <div class="problem-icon">📉</div>
+                    <div class="problem-stat">34%</div>
+                    <h3>낮은 완료율</h3>
+                    <p>설정한 알림의 1/3만 실제로 완료되는 현실</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title fade-in">주요 기능</h2>
+            <p class="section-subtitle fade-in">생산성을 극대화하는 스마트한 기능들</p>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🎯</div>
+                    <h3>원터치 완료</h3>
+                    <p>오른쪽으로 스와이프하면 즉시 완료 처리. 더 이상 앱을 열 필요가 없습니다.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">⏰</div>
+                    <h3>스마트 재알림</h3>
+                    <p>왼쪽으로 스와이프하고 원하는 시간을 선택하세요. 2초면 충분합니다.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📊</div>
+                    <h3>성과 추적</h3>
+                    <p>일간, 주간, 월간 완료율을 한눈에. 당신의 성장을 시각화합니다.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🔔</div>
+                    <h3>스마트 알림</h3>
+                    <p>중요도와 시간대를 학습하여 최적의 타이밍에 알림을 전송합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title fade-in">사용자 후기</h2>
+            <p class="section-subtitle fade-in">베타 테스터들의 생생한 경험</p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text">드디어 제가 원하던 앱을 찾았어요! 알림 처리가 이렇게 쉬울 줄 몰랐습니다. 완료율이 정말 34%에서 89%로 올랐어요.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">김</div>
+                        <div class="author-info">
+                            <h4>김민수</h4>
+                            <p>스타트업 대표</p>
+                        </div>
+                    </div>
+                    <div class="rating">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card fade-in">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text">iOS의 기본 기능이어야 할 정도로 자연스러워요. 스와이프 한 번으로 모든 게 해결되니 시간이 정말 많이 절약됩니다.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">이</div>
+                        <div class="author-info">
+                            <h4>이서연</h4>
+                            <p>프로덕트 디자이너</p>
+                        </div>
+                    </div>
+                    <div class="rating">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card fade-in">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text">재알림 기능이 정말 똑똑해요. 내가 보통 미루는 패턴을 학습해서 적절한 시간을 추천해줍니다.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">박</div>
+                        <div class="author-info">
+                            <h4>박준혁</h4>
+                            <p>마케팅 매니저</p>
+                        </div>
+                    </div>
+                    <div class="rating">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="download">
+        <div class="cta-bg"></div>
+        <div class="container">
+            <div class="cta-content">
+                <h2>지금 바로 시작하세요</h2>
+                <p>매일 23개의 미완료 알림에서 자유로워지세요</p>
+                
+                <div class="email-contact" style="margin-top: 48px;">
+                    <p style="font-size: 20px; margin-bottom: 24px;">문의사항 및 출시 알림</p>
+                    <a href="mailto:justdoit181@naver.com" class="btn btn-primary" style="font-size: 20px; padding: 20px 40px;">
+                        📧 justdoit181@naver.com
+                    </a>
+                    <p style="margin-top: 24px; font-size: 16px; opacity: 0.7;">
+                        함께 만드는 SwipeTask - 당신의 피드백을 기다립니다
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">SwipeTask</div>
+                <ul class="footer-links">
+                    <li><a href="#">개인정보처리방침</a></li>
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#">문의하기</a></li>
+                    <li><a href="#">블로그</a></li>
+                </ul>
+                <div class="social-links">
+                    <a href="#" class="social-link">𝕏</a>
+                    <a href="#" class="social-link">📧</a>
+                    <a href="#" class="social-link">💬</a>
+                </div>
+            </div>
+            <p class="copyright">© 2024 SwipeTask. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modal for Demo -->
+    <div class="modal" id="demoModal">
+        <button class="modal-close" onclick="closeDemo()">✕</button>
+        <iframe src="demo.html" style="width: 390px; height: 844px; border: none; border-radius: 47px; box-shadow: 0 0 0 12px #1a1a1a, 0 0 60px rgba(0,0,0,0.8);" id="modalDemoFrame"></iframe>
+    </div>
+
+    <script>
+        // Google Analytics 이벤트 추적 함수
+        function trackEvent(eventName, parameters = {}) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, parameters);
+            }
+        }
+
+        // 페이지 로드 시 페이지뷰 추적
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 1000);
+            
+            // 페이지뷰 이벤트
+            trackEvent('page_view', {
+                page_title: 'SwipeTask Landing Page',
+                page_location: window.location.href
+            });
+        });
+
+        // 스크롤 깊이 추적
+        let scrollDepths = {25: false, 50: false, 75: false, 90: false};
+        let lastScrollPosition = 0;
+
+        function trackScrollDepth() {
+            const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            
+            // 스크롤 방향 감지
+            const scrollDirection = window.scrollY > lastScrollPosition ? 'down' : 'up';
+            lastScrollPosition = window.scrollY;
+
+            // 스크롤 깊이별 이벤트 추적
+            if (scrollPercentage >= 25 && !scrollDepths[25]) {
+                scrollDepths[25] = true;
+                trackEvent('scroll', {
+                    percent_scrolled: 25,
+                    direction: scrollDirection
+                });
+            } else if (scrollPercentage >= 50 && !scrollDepths[50]) {
+                scrollDepths[50] = true;
+                trackEvent('scroll', {
+                    percent_scrolled: 50,
+                    direction: scrollDirection
+                });
+            } else if (scrollPercentage >= 75 && !scrollDepths[75]) {
+                scrollDepths[75] = true;
+                trackEvent('scroll', {
+                    percent_scrolled: 75,
+                    direction: scrollDirection
+                });
+            } else if (scrollPercentage >= 90 && !scrollDepths[90]) {
+                scrollDepths[90] = true;
+                trackEvent('scroll', {
+                    percent_scrolled: 90,
+                    direction: scrollDirection
+                });
+            }
+        }
+
+        // 스크롤 이벤트 리스너 (디바운스 적용)
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+            scrollTimeout = setTimeout(trackScrollDepth, 100);
+        });
+
+        // 평균 체류 시간 추적
+        let startTime = Date.now();
+        let timeSpent = 0;
+        let isActive = true;
+
+        // 페이지 가시성 변경 감지
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                isActive = false;
+                timeSpent += Date.now() - startTime;
+            } else {
+                isActive = true;
+                startTime = Date.now();
+            }
+        });
+
+        // 페이지 떠날 때 체류 시간 전송
+        window.addEventListener('beforeunload', () => {
+            if (isActive) {
+                timeSpent += Date.now() - startTime;
+            }
+            trackEvent('timing_complete', {
+                name: 'time_on_page',
+                value: Math.round(timeSpent / 1000), // 초 단위로 전환
+                event_category: 'engagement'
+            });
+        });
+
+        // 섹션별 이탈률 추적
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.id;
+                    trackEvent('view_section', {
+                        section_name: sectionId,
+                        timestamp: Date.now()
+                    });
+                    
+                    // 데모 섹션 특별 추적
+                    if (sectionId === 'solution') {
+                        trackEvent('demo_section_viewed', {
+                            time_to_view: Math.round((Date.now() - startTime) / 1000)
+                        });
+                    }
+                }
+            });
+        }, {
+            threshold: 0.5 // 섹션의 50% 이상이 보일 때
+        });
+
+        // 각 섹션 관찰
+        document.querySelectorAll('section').forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // CTA 버튼 클릭 추적
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const buttonText = this.textContent.trim();
+                const buttonClass = this.className;
+                
+                trackEvent('click', {
+                    button_text: buttonText,
+                    button_class: buttonClass,
+                    click_location: this.closest('section')?.id || 'unknown'
+                });
+                
+                // 이메일 링크 클릭 특별 추적 (전환 이벤트)
+                if (this.href && this.href.includes('mailto:')) {
+                    trackEvent('conversion', {
+                        conversion_type: 'email_click',
+                        value: 1
+                    });
+                }
+            });
+        });
+
+        // Navigation bar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Load demo in iframe
+        window.addEventListener('load', () => {
+            const demoFrame = document.getElementById('demoFrame');
+            const modalDemoFrame = document.getElementById('modalDemoFrame');
+            
+            // 데모 iframe 로드 완료 추적
+            demoFrame.addEventListener('load', () => {
+                trackEvent('demo_loaded', {
+                    load_time: Date.now() - startTime
+                });
+            });
+        });
+
+        // Show demo modal
+        function showDemo() {
+            const modal = document.getElementById('demoModal');
+            modal.classList.add('active');
+            
+            trackEvent('demo_modal_opened');
+        }
+
+        // Close demo modal
+        function closeDemo() {
+            const modal = document.getElementById('demoModal');
+            modal.classList.remove('active');
+            
+            trackEvent('demo_modal_closed');
+        }
+
+        // Smooth scrolling for navigation links and buttons
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                if (target) {
+                    const offsetTop = target.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Alternative method for demo button
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const offsetTop = section.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+                
+                // 특별 추적: 데모 체험하기 버튼
+                if (sectionId === 'solution') {
+                    trackEvent('demo_cta_clicked', {
+                        source: 'hero_section'
+                    });
+                }
+            }
+        }
+
+        // 마우스 이동 히트맵을 위한 기본 추적 (선택사항)
+        let mousePositions = [];
+        let mouseTrackingInterval;
+
+        function startMouseTracking() {
+            mouseTrackingInterval = setInterval(() => {
+                if (mousePositions.length > 0) {
+                    // 평균 위치 계산
+                    const avgX = mousePositions.reduce((sum, pos) => sum + pos.x, 0) / mousePositions.length;
+                    const avgY = mousePositions.reduce((sum, pos) => sum + pos.y, 0) / mousePositions.length;
+                    
+                    trackEvent('mouse_activity', {
+                        avg_x: Math.round(avgX),
+                        avg_y: Math.round(avgY),
+                        activity_count: mousePositions.length
+                    });
+                    
+                    mousePositions = [];
+                }
+            }, 5000); // 5초마다 전송
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            mousePositions.push({
+                x: e.clientX,
+                y: e.clientY
+            });
+        });
+
+        // 마우스 추적 시작 (선택사항 - 성능 고려)
+        // startMouseTracking();
+    </script>
+</body>
+</html>

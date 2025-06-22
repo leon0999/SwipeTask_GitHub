@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SwipeTask - 완벽한 알림 관리</title>
+    <title>SwipeTask - Perfect Notification Management</title>
     <style>
         * {
             margin: 0;
@@ -694,7 +694,7 @@
                 <div class="screen">
                     <!-- Status Bar -->
                     <div class="status-bar">
-                        <span class="carrier">KT</span>
+                        <span class="carrier">Verizon</span>
                         <div class="status-icons">
                             <div class="signal-bars">
                                 <div class="bar"></div>
@@ -702,7 +702,7 @@
                                 <div class="bar"></div>
                                 <div class="bar"></div>
                             </div>
-                            <span>LTE</span>
+                            <span>5G</span>
                             <div class="battery">
                                 <div class="battery-fill"></div>
                             </div>
@@ -714,7 +714,7 @@
                     <div class="notification-layer" id="notificationLayer">
                         <!-- Clock Display -->
                         <div class="clock-display">
-                            <div class="date">6월 19일 (목)</div>
+                            <div class="date">Thursday, June 19</div>
                             <div class="time">10:42</div>
                         </div>
 
@@ -753,8 +753,8 @@
                                     <div style="position: absolute; top: 22px; left: 18px; width: 18px; height: 30px; border: solid #32d74b; border-width: 0 4px 4px 0; transform: rotate(45deg);"></div>
                                 </div>
                             </div>
-                            <div style="font-size: 32px; font-weight: 700; margin-bottom: 12px;">완벽하게 끝났습니다</div>
-                            <div style="font-size: 18px; font-weight: 400; opacity: 0.8;">모든 알림을 처리했어요</div>
+                            <div style="font-size: 32px; font-weight: 700; margin-bottom: 12px;">Perfectly Done!</div>
+                            <div style="font-size: 18px; font-weight: 400; opacity: 0.8;">All notifications processed</div>
                         </div>
                     </div>
 
@@ -767,15 +767,15 @@
 
     <script>
         const notifications = [
-            { id: 1, title: '20대 목표 10개 쓰기', subtitle: '오늘 오전 5:00' },
-            { id: 2, title: '이불 개서 정리하기', subtitle: '오늘 오전 5:00' },
-            { id: 3, title: 'KPI 3, 진행상황 설정하기', subtitle: '오늘 오전 8:30' },
-            { id: 4, title: '이번주 가설검증 행동하기', subtitle: '오늘 오전 8:30' }
+            { id: 1, title: 'Write 10 goals for your 20s', subtitle: 'Today at 5:00 AM' },
+            { id: 2, title: 'Make the bed', subtitle: 'Today at 5:00 AM' },
+            { id: 3, title: 'Set Q3 KPIs and progress', subtitle: 'Today at 8:30 AM' },
+            { id: 4, title: 'Execute this week\'s hypothesis', subtitle: 'Today at 8:30 AM' }
         ];
 
         const timeOptions = {
-            date: ['오늘', '내일', '모레', '이번주'],
-            time: ['오전 9시', '오후 2시', '오후 5시', '오후 8시']
+            date: ['Today', 'Tomorrow', 'In 2 days', 'This week'],
+            time: ['9:00 AM', '2:00 PM', '5:00 PM', '8:00 PM']
         };
 
         function createNotificationHTML(notification) {
@@ -798,8 +798,8 @@
                                     <div class="dot-blue"></div>
                                 </div>
                             </div>
-                            <span class="app-name">긴급</span>
-                            <span class="notification-time">40분 전</span>
+                            <span class="app-name">Urgent</span>
+                            <span class="notification-time">40 min ago</span>
                         </div>
                         <div class="notification-title">${notification.title}</div>
                         <div class="notification-subtitle">${notification.subtitle}</div>
